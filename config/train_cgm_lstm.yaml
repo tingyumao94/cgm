@@ -1,0 +1,38 @@
+net:
+  rnn_type: lstm
+  num_hidden: 8
+
+data:
+  split_ratio: 0.9
+
+  root_dir: data/type1
+  in_features: ["Correction Bolus", "Meal Bolus", "gCarbs", "Carbohydrate", "hr", "steps", "sleep_code"]
+  out_features: ["bg"]
+  time_steps: 30
+  hist_length: 12
+
+  pat1:
+    begin_date:
+    end_date:
+  pat2:
+    begin_date:
+    end_date:
+  pat3:
+    begin_date: '2018-06-25 00:00:00'
+    end_date: '2018-07-07 00:00:00'
+  pat4:
+    begin_date: '2018-06-28 00:00:00'
+    end_date: '2018-07-07 00:00:00'
+  pat5:
+    begin_date: '2018-06-28 00:00:00'
+    end_date: '2018-07-12 00:00:00'
+  pat6:
+    begin_date:
+    end_date:
+
+training:
+  batch_size: 32
+
+testing:
+  batch_size: 32
+
