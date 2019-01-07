@@ -7,7 +7,7 @@ setup(
     version='0.0.0',
     author='Tingyu',
     description='cgm',
-    install_requires=['argparse', 'numpy', 'pyyaml', 'pandas', 'six', 'torch', 'scipy'],
+    install_requires=['argparse', 'numpy', 'pyyaml', 'pandas', 'six', 'mxnet', 'scipy'],
     url='',
     packages=find_packages()
 )
