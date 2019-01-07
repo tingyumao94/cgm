@@ -1,3 +1,6 @@
+name: cgm_lstm
+env:
+  gpu:
 net:
   rnn_type: lstm
   num_hidden: 8
@@ -32,6 +35,11 @@ data:
 
 training:
   batch_size: 32
+  optim:
+    type: 'adam'
+    learning_rate: 1e-3
+    decay_weight: 0.01
+    clip_gradient: 10.0
 
 testing:
   batch_size: 32

@@ -5,7 +5,7 @@ import numpy as np
 import mxnet as mx
 import random
 
-from .utils import parse_single_pat_files, parse_data_files, read_one_subject_data, select_time_window
+from .utils.data import parse_single_pat_files, parse_data_files, read_one_subject_data, select_time_window
 from .preprocess import butter_lowpass_filter
 
 

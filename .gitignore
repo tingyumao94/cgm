@@ -1,4 +1,7 @@
+build/*
+dist/*
 data/*
 .idea/*
 *.egg-info/*
 *.DS_Store
+samples/*
