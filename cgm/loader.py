@@ -38,7 +38,7 @@ class CgmLoader(mx.io.DataIter):
 
         self.data_shapes = [('initial_state', (self.batch_size, self.time_steps)),
                             ('in_features', (self.batch_size, self.time_steps, len(self.in_features)))]
-        self.label_shapes = [('gt_bgv', (self.batch_size, self.time_steps, self.num_out))]
+        self.label_shapes = [('ground_truth', (self.batch_size, self.time_steps, self.num_out))]
 
         self.size = self.in_data.shape[0]
 

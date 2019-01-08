@@ -38,7 +38,7 @@ training:
   optim:
     type: 'adam'
     learning_rate: 1e-3
-    decay_weight: 0.01
+    weight_decay: 0.01
     clip_gradient: 10.0
 
 testing:
