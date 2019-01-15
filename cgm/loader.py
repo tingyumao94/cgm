@@ -36,7 +36,7 @@ class CgmLoader(mx.io.DataIter):
         self.initial_state_data = data['initial_states']
         self.bg_data = data['bg_data']
 
-        self.data_shapes = [('initial_state', (self.batch_size, self.time_steps)),
+        self.data_shapes = [('initial_state', (self.batch_size, self.hist_len)),
                             ('in_features', (self.batch_size, self.time_steps, len(self.in_features)))]
         self.label_shapes = [('ground_truth', (self.batch_size, self.time_steps, self.num_out))]
 
@@ -46,6 +46,12 @@ class CgmLoader(mx.io.DataIter):
 
     def reset(self):
         self.current = 0
+        random_shuffle_inds = np.arange(self.size)
+        random.shuffle(random_shuffle_inds)
+        self.in_data = self.in_data[random_shuffle_inds]
+        self.out_data = self.out_data[random_shuffle_inds]
+        self.initial_state_data = self.initial_state_data[random_shuffle_inds]
+        self.bg_data = self.bg_data[random_shuffle_inds]
 
     def next(self):
         if self.iter_next():
@@ -196,7 +202,7 @@ class CgmLoader(mx.io.DataIter):
             t2 = t1 + time_steps
 
         # random shuffle
-        random.shuffle(all_data)
+        # random.shuffle(all_data)
 
         in_data = np.array([x[0] for x in all_data])
         out_data = np.array([x[1] for x in all_data])
@@ -205,7 +211,7 @@ class CgmLoader(mx.io.DataIter):
         bg_data = np.array([x[3] for x in all_data])
 
         num_train = int(in_data.shape[0] * self.split_ratio)
-        if self.is_train == "TRAIN":
+        if self.is_train:
             in_data = in_data[:num_train]
             out_data = out_data[:num_train]
             hist_data = hist_data[:num_train]

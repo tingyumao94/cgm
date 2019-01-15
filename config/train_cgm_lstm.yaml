@@ -1,9 +1,9 @@
-name: cgm_lstm
 env:
   gpu:
 net:
+  name: cgm_lstm
   rnn_type: lstm
-  num_hidden: 8
+  num_hidden: 4
 
 data:
   split_ratio: 0.9
@@ -18,8 +18,8 @@ data:
     begin_date:
     end_date:
   pat2:
-    begin_date:
-    end_date:
+    begin_date: '2018-06-15 00:00:00'
+    end_date: '2018-07-01 12:00:00'
   pat3:
     begin_date: '2018-06-25 00:00:00'
     end_date: '2018-07-07 00:00:00'
@@ -30,17 +30,23 @@ data:
     begin_date: '2018-06-28 00:00:00'
     end_date: '2018-07-12 00:00:00'
   pat6:
-    begin_date:
-    end_date:
+    begin_date: '2018-07-09 00:00:00'
+    end_date: '2018-07-20 00:00:00'
 
 training:
+  subject_id: 3
   batch_size: 32
+  num_epoch: 500
   optim:
     type: 'adam'
     learning_rate: 1e-3
     weight_decay: 0.01
     clip_gradient: 10.0
+  logdir: models/
 
 testing:
-  batch_size: 32
+  subject_id: 3
+  batch_size: 4
+  model_load_prefix: /mnt/truenas/scratch/tingyumao/cgm/models/cgm_lstm_pat3/2019_01_08_20_54_09/2019_01_08_20_54_09
+  model_load_epoch: 180
 

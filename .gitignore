@@ -5,4 +5,8 @@ data/*
 *.egg-info/*
 *.DS_Store
 samples/*
+models/*
+
+__pycache__/
+*.py[cod]
 *.pyc

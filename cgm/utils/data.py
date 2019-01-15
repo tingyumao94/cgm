@@ -15,7 +15,7 @@ def parse_single_pat_files(data_dir, subject_id):
     for f in sorted(sub_files):
         if "activity" in f or "Activity" in f:
             sub_dict['activity'] = os.path.join(sub_dir, f)
-        elif "_CGM_" in f or "Glucose" in f:
+        elif "_CGM_" in f or "Glucose" in f or "CGM" in f:
             sub_dict['CGM'] = os.path.join(sub_dir, f)
         elif "_heartrate_" in f or "HR" in f:
             sub_dict['hr'] = os.path.join(sub_dir, f)
