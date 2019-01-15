@@ -10,7 +10,7 @@ from .preprocess import butter_lowpass_filter
 
 
 class CgmLoader(mx.io.DataIter):
-    def __init__(self, subject_id, config, is_train):
+    def __init__(self, subject_id, config, batch_size, is_train):
 
         super(CgmLoader, self).__init__()
 
@@ -20,7 +20,7 @@ class CgmLoader(mx.io.DataIter):
         self.in_features = config['data']['in_features']
         self.out_feature = config['data']['out_features']
         self.num_out = 1
-        self.batch_size = config['training']['batch_size'] if is_train else config['testing']['batch_size']
+        self.batch_size = batch_size
 
         self.time_steps = config['data']['time_steps']
         self.hist_len = config['data']['hist_length']
@@ -35,6 +35,7 @@ class CgmLoader(mx.io.DataIter):
         self.out_data = data['out_seq']
         self.initial_state_data = data['initial_states']
         self.bg_data = data['bg_data']
+        self.bg_prev_data = data['bg_prev_data']
 
         self.data_shapes = [('initial_state', (self.batch_size, self.hist_len)),
                             ('in_features', (self.batch_size, self.time_steps, len(self.in_features)))]
@@ -52,6 +53,7 @@ class CgmLoader(mx.io.DataIter):
         self.out_data = self.out_data[random_shuffle_inds]
         self.initial_state_data = self.initial_state_data[random_shuffle_inds]
         self.bg_data = self.bg_data[random_shuffle_inds]
+        self.bg_prev_data = self.bg_prev_data[random_shuffle_inds]
 
     def next(self):
         if self.iter_next():
@@ -197,7 +199,8 @@ class CgmLoader(mx.io.DataIter):
         t1 = state_size
         t2 = t1 + time_steps
         while t2 < bgv.shape[0]:
-            all_data.append([in_seqs[t1:t2], bgv[t1:t2], bgv[t1 - state_size:t1], bg[t1:t2]])
+            all_data.append([in_seqs[t1:t2], bgv[t1:t2], bgv[t1 - state_size:t1],
+                             bg[t1:t2], bg[t1 - state_size:t1]])
             t1 += 2
             t2 = t1 + time_steps
 
@@ -209,6 +212,7 @@ class CgmLoader(mx.io.DataIter):
         hist_data = np.array([x[2] for x in all_data])
         hist_data = np.squeeze(hist_data)
         bg_data = np.array([x[3] for x in all_data])
+        bg_prev_data = np.array([x[4] for x in all_data])
 
         num_train = int(in_data.shape[0] * self.split_ratio)
         if self.is_train:
@@ -216,15 +220,18 @@ class CgmLoader(mx.io.DataIter):
             out_data = out_data[:num_train]
             hist_data = hist_data[:num_train]
             bg_data = bg_data[:num_train]
+            bg_prev_data = bg_prev_data[:num_train]
         else:
             in_data = in_data[num_train:]
             out_data = out_data[num_train:]
             hist_data = hist_data[num_train:]
             bg_data = bg_data[num_train:]
+            bg_prev_data = bg_prev_data[num_train:]
 
         print("Input sequence shape: {}".format(in_data.shape))
         print("Output sequence shape: {}".format(out_data.shape))
         print("History sequence shape: {}".format(hist_data.shape))
         print("Blood glucose sequence shape: {}".format(bg_data.shape))
+        print("Blood glucose hist sequence shape: {}".format(bg_prev_data.shape))
 
-        return {'bg_data': bg_data, 'in_seq': in_data, 'out_seq': out_data, 'initial_states': hist_data}
+        return {'bg_data': bg_data, 'bg_prev_data': bg_prev_data, 'in_seq': in_data, 'out_seq': out_data, 'initial_states': hist_data}

@@ -10,7 +10,7 @@ from cgm.utils.params import summary
 from cgm.utils.log import init_logger
 from cgm.utils.dir import mkdir_if_not_exist
 
-with open('./config/train_cgm_lstm.yaml') as f:
+with open('./config/cgm_lstm.yaml') as f:
     cfg = yaml.load(f)
 
 subject_id = cfg['training']['subject_id']
@@ -27,8 +27,8 @@ data_shapes = [('initial_state', (batch_size, hist_length)), ('in_features', (ba
 label_names = ['ground_truth']
 label_shapes = [('ground_truth', (batch_size, time_steps, 1))]
 
-train_data = CgmLoader(subject_id=subject_id, config=cfg, is_train=True)
-val_data = CgmLoader(subject_id=subject_id, config=cfg, is_train=False)
+train_data = CgmLoader(subject_id=subject_id, config=cfg, batch_size=batch_size, is_train=True)
+val_data = CgmLoader(subject_id=subject_id, config=cfg, batch_size=batch_size, is_train=False)
 
 # build model
 sym = train_cgm_lstm(rnn_num_hidden=cfg['net']['num_hidden'], time_steps=cfg['data']['time_steps'])

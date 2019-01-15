@@ -3,7 +3,7 @@ env:
 net:
   name: cgm_lstm
   rnn_type: lstm
-  num_hidden: 4
+  num_hidden: 8
 
 data:
   split_ratio: 0.9
@@ -50,3 +50,12 @@ testing:
   model_load_prefix: /mnt/truenas/scratch/tingyumao/cgm/models/cgm_lstm_pat3/2019_01_08_20_54_09/2019_01_08_20_54_09
   model_load_epoch: 180
 
+visualization:
+  subject_id: 3
+  batch_size: 1
+  model_load_prefix: /mnt/truenas/scratch/tingyumao/cgm/models/cgm_lstm_pat3/2019_01_08_20_54_09/2019_01_08_20_54_09
+  model_load_epoch: 180
+  max_treatments: [0, 4.87, 25.0, 92.0, 92.0]
+  treatments: [0, 2.5, 80, 60, 55]
+  treatment_names: ["None", "Correction Bolus", "Meal Bolus", "gCarbs", "Carbohydrate"]
+  treatment_units: ["", "u", "u", "g", "g"]

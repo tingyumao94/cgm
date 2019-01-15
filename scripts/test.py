@@ -11,13 +11,13 @@ from cgm.utils.log import init_logger
 from cgm.utils.dir import mkdir_if_not_exist
 from cgm.utils.params import load_checkpoint
 
-with open('./config/train_cgm_lstm.yaml') as f:
+with open('./config/cgm_lstm.yaml') as f:
     cfg = yaml.load(f)
 
 subject_id = cfg['testing']['subject_id']
 
 # load data
-batch_size = cfg['test']['batch_size']
+batch_size = cfg['testing']['batch_size']
 time_steps = cfg['data']['time_steps']
 hist_length = cfg['data']['hist_length']
 num_in = len(cfg['data']['in_features'])
@@ -28,7 +28,7 @@ data_shapes = [('initial_state', (batch_size, hist_length)), ('in_features', (ba
 label_names = ['ground_truth']
 label_shapes = [('ground_truth', (batch_size, time_steps, 1))]
 
-val_data = CgmLoader(subject_id=subject_id, config=cfg, is_train=False)
+val_data = CgmLoader(subject_id=subject_id, config=cfg, batch_size=batch_size, is_train=False)
 
 # build model
 sym = test_cgm_lstm(rnn_num_hidden=cfg['net']['num_hidden'], time_steps=cfg['data']['time_steps'])
@@ -56,14 +56,23 @@ for data_batch in val_data:
     all_predictions.append(predictions)
     all_gt.append(gt)
 
-# prediction
-time_points = [3, 6, 12]
+# prediction: rmse
 pred_err_15 = []
 pred_err_30 = []
 pred_err_60 = []
 for pred, gt in zip(all_predictions, all_gt):
     pred_cumsum = np.cumsum(pred, axis=1)
     gt_cumsum = np.cumsum(gt, axis=1)
-    pred_err_15.append()
+    pred_err_15.append((gt_cumsum[:, 3] - pred_cumsum[:, 3])**2)
+    pred_err_30.append((gt_cumsum[:, 6] - pred_cumsum[:, 6]) ** 2)
+    pred_err_60.append((gt_cumsum[:, 12] - pred_cumsum[:, 12]) ** 2)
 
+pred_err_15 = np.squeeze(np.concatenate(pred_err_15, axis=0))
+pred_err_30 = np.squeeze(np.concatenate(pred_err_30, axis=0))
+pred_err_60 = np.squeeze(np.concatenate(pred_err_60, axis=0))
 
+print("-"*40)
+print("Evaluation of Subject {} Model".format(subject_id))
+print("RMSE of 15-minute prediction: {:.2f} mg/dL".format(np.mean(pred_err_15)**0.5))
+print("RMSE of 30-minute prediction: {:.2f} mg/dL".format(np.mean(pred_err_30)**0.5))
+print("RMSE of 60-minute prediction: {:.2f} mg/dL".format(np.mean(pred_err_60)**0.5))
