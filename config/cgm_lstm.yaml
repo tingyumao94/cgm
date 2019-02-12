@@ -9,7 +9,8 @@ data:
   split_ratio: 0.9
 
   root_dir: data/type1
-  in_features: ["Correction Bolus", "Meal Bolus", "gCarbs", "Carbohydrate", "hr", "steps", "sleep_code"]
+  in_features: ["Correction Bolus", "Meal Bolus", "gCarbs", "Carbohydrate", "steps", "sleep_code"]
+  # ["Correction Bolus", "Meal Bolus", "gCarbs", "Carbohydrate", "hr", "steps", "sleep_code"]
   out_features: ["bg"]
   time_steps: 30
   hist_length: 12
@@ -34,7 +35,7 @@ data:
     end_date: '2018-07-20 00:00:00'
 
 training:
-  subject_id: 3
+  subject_id: 6
   batch_size: 32
   num_epoch: 500
   optim:
@@ -45,16 +46,16 @@ training:
   logdir: models/
 
 testing:
-  subject_id: 3
+  subject_id: 6
   batch_size: 4
-  model_load_prefix: /mnt/truenas/scratch/tingyumao/cgm/models/cgm_lstm_pat3/2019_01_08_20_54_09/2019_01_08_20_54_09
-  model_load_epoch: 180
+  model_load_prefix: /mnt/truenas/scratch/tingyumao/cgm/models/cgm_lstm_pat6/2019_02_04_21_10_46/2019_02_04_21_10_46
+  model_load_epoch: 480
 
 visualization:
   subject_id: 3
   batch_size: 1
-  model_load_prefix: /mnt/truenas/scratch/tingyumao/cgm/models/cgm_lstm_pat3/2019_01_08_20_54_09/2019_01_08_20_54_09
-  model_load_epoch: 180
+  model_load_prefix: /mnt/truenas/scratch/tingyumao/cgm/models/cgm_lstm_pat6/2019_02_04_21_03_16/2019_02_04_21_03_16
+  model_load_epoch: 500
   max_treatments: [0, 4.87, 25.0, 92.0, 92.0]
   treatments: [0, 2.5, 80, 60, 55]
   treatment_names: ["None", "Correction Bolus", "Meal Bolus", "gCarbs", "Carbohydrate"]

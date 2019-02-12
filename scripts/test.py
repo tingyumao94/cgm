@@ -60,19 +60,33 @@ for data_batch in val_data:
 pred_err_15 = []
 pred_err_30 = []
 pred_err_60 = []
+lag_err_15 = []
+lag_err_30 = []
+lag_err_60 = []
 for pred, gt in zip(all_predictions, all_gt):
     pred_cumsum = np.cumsum(pred, axis=1)
     gt_cumsum = np.cumsum(gt, axis=1)
-    pred_err_15.append((gt_cumsum[:, 3] - pred_cumsum[:, 3])**2)
-    pred_err_30.append((gt_cumsum[:, 6] - pred_cumsum[:, 6]) ** 2)
-    pred_err_60.append((gt_cumsum[:, 12] - pred_cumsum[:, 12]) ** 2)
+    pred_err_15.append(gt_cumsum[:, 2] - pred_cumsum[:, 2])
+    pred_err_30.append(gt_cumsum[:, 5] - pred_cumsum[:, 5])
+    pred_err_60.append(gt_cumsum[:, 11] - pred_cumsum[:, 11])
+    lag_err_15.append(gt_cumsum[:, 2])
+    lag_err_30.append(gt_cumsum[:, 5])
+    lag_err_60.append(gt_cumsum[:, 11])
 
 pred_err_15 = np.squeeze(np.concatenate(pred_err_15, axis=0))
 pred_err_30 = np.squeeze(np.concatenate(pred_err_30, axis=0))
 pred_err_60 = np.squeeze(np.concatenate(pred_err_60, axis=0))
 
+lag_err_15 = np.squeeze(np.concatenate(lag_err_15, axis=0))
+lag_err_30 = np.squeeze(np.concatenate(lag_err_30, axis=0))
+lag_err_60 = np.squeeze(np.concatenate(lag_err_60, axis=0))
+
 print("-"*40)
 print("Evaluation of Subject {} Model".format(subject_id))
-print("RMSE of 15-minute prediction: {:.2f} mg/dL".format(np.mean(pred_err_15)**0.5))
-print("RMSE of 30-minute prediction: {:.2f} mg/dL".format(np.mean(pred_err_30)**0.5))
-print("RMSE of 60-minute prediction: {:.2f} mg/dL".format(np.mean(pred_err_60)**0.5))
+print("RMSE/STD of 15-minute prediction: {:.2f}/{:.2f} mg/dL".format(np.mean(pred_err_15**2)**0.5, np.std(pred_err_15)))
+print("RMSE/STD of 30-minute prediction: {:.2f}/{:.2f} mg/dL".format(np.mean(pred_err_30**2)**0.5, np.std(pred_err_30)))
+print("RMSE/STD of 60-minute prediction: {:.2f}/{:.2f} mg/dL".format(np.mean(pred_err_60**2)**0.5, np.std(pred_err_60)))
+
+print("RMSE/STD of 15-minute lag prediction: {:.2f}/{:.2f} mg/dL".format(np.mean(lag_err_15**2)**0.5, np.std(lag_err_15)))
+print("RMSE/STD of 30-minute lag prediction: {:.2f}/{:.2f} mg/dL".format(np.mean(lag_err_30**2)**0.5, np.std(lag_err_30)))
+print("RMSE/STD of 60-minute lag prediction: {:.2f}/{:.2f} mg/dL".format(np.mean(lag_err_60**2)**0.5, np.std(lag_err_60)))
